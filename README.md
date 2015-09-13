@@ -10,8 +10,8 @@ bower install -S angular-yii2-validator
 ```
 
 ##Usage
+Add dependency 'yii2Validator' in your application module declaration.
 
-1. Add dependency 'yii2Validator' in your application module declaration.
 ```js
 angular.module('yourApp', [
     // ...
@@ -20,7 +20,8 @@ angular.module('yourApp', [
 ])
 ```
 
-2. In your template add the 'yii2-validate' attribute to the form in which you would like to receive server-side validation errors.
+In your template add the 'yii2-validate' attribute to the form in which you would like to receive server-side validation errors.
+
 ```html
 <form yii2-validate ng-submit="form.submit()" name="form">
     <input ng-model="form.username" name="username" type="text" required>
