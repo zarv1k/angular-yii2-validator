@@ -1,0 +1,33 @@
+{
+  "name": "angular-yii2-validator",
+  "version": "0.0.1",
+  "authors": [
+    "Dmitry Zarva <zarv1k@gmail.com>"
+  ],
+  "description": "Angular directives for automated handling of Yii2 server-side validation errors.",
+  "main": "src/angular-yii2-validator.js",
+  "keywords": [
+    "angular",
+    "yii2",
+    "angularjs",
+    "errors",
+    "validation",
+    "validator"
+  ],
+  "license": "MIT",
+  "homepage": "zarv1k.net",
+  "dependencies": {
+    "angular": "~1.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/zarv1k/angular-yii2-validator.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
