@@ -26,8 +26,8 @@ In your template add the 'yii2-validate' attribute to the form in which you woul
 <form yii2-validate ng-submit="form.submit()" name="form">
     <input ng-model="form.username" name="username" type="text" required>
     <span ng-show="form.username.$error.required" class="help-block">{{form.username.$error.required}}</span>
-    <span ng-show="form.username.$error.serverMessage" class="help-block">{{form.username.$error.serverMessage}}</span>
+    <span ng-show="form.username.$error.server" class="help-block">{{form.username.$error.server}}</span>
 </form>
 ```
 
-In example above after form submit when server returns validation error for field 'username' the error message would be in 'form.username.$error.serverMessage'.
+In example above after form submit when server returns validation error for field 'username' the error message would be in 'form.username.$error.server'.

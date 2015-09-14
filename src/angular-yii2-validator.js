@@ -3,9 +3,9 @@
 
     angular.module('yii2Validator', [])
         .constant('YII2_VALIDATE_EVENT', 'yii2-validate-event')
-        .factory('yii2ResponseInterceptor', ['$log', '$q', '$rootScope', 'YII2_VALIDATE_EVENT', responseInterceptor])
-        .directive('yii2Validate', ['$log', 'YII2_VALIDATE_EVENT', yii2ValidateDirective])
-        .directive("ngSubmit", ['$log', yii2NgSubmit])
+        .factory('yii2ResponseInterceptor', ['$q', '$rootScope', 'YII2_VALIDATE_EVENT', responseInterceptor])
+        .directive('yii2Validate', ['YII2_VALIDATE_EVENT', yii2ValidateDirective])
+        .directive('ngSubmit', yii2NgSubmit)
         .config(['$httpProvider', configModule])
         .run(['$log', run]);
 
@@ -17,24 +17,23 @@
         $log.debug('yii2-validator module loaded');
     }
 
-    function yii2NgSubmit($log) {
+    function yii2NgSubmit() {
         return {
-            require: "?form",
+            require:'?form',
             priority: 10,
             link: {
                 pre: function (scope, element, attrs, form) {
-                    element.on("submit", function () {
-                        $log.debug('On submit form name ' + form.$name);
+                    element.on('submit', function () {
                         if (form && form.$valid) {
                             form.yii2Validating = true;
                         }
-                    })
+                    });
                 }
             }
-        }
+        };
     }
 
-    function yii2ValidateDirective(YII2_VALIDATE_EVENT, $log) {
+    function yii2ValidateDirective(YII2_VALIDATE_EVENT) {
         return {
             require: '^form',
             restrict: 'A',
@@ -45,7 +44,7 @@
                     if (angular.isObject(ngModel) && ngModel.hasOwnProperty('$modelValue')) {
                         ngModel.$validators.server = function () {
                             ngModel.$setValidity('server', true);
-                            delete ngModel.$error.serverMessage;
+                            delete ngModel.$error.server;
                             return true;
                         };
                     }
@@ -57,31 +56,21 @@
                         angular.forEach(data.errors, function (error) {
                             if (form.hasOwnProperty(error.field)) {
                                 form[error.field].$setValidity('server', false);
-                                form[error.field].$error.serverMessage = error.message;
+                                form[error.field].$error.server = error.message;
                             }
                         });
-                    }
-                    else {
-                        $log.debug('Form ' + form.$name + ' not submitting');
                     }
                 });
             }
         };
     }
 
-    function responseInterceptor($log, $q, $rootScope, YII2_VALIDATE_EVENT) {
-        var attributes;
-
+    function responseInterceptor($q, $rootScope, YII2_VALIDATE_EVENT) {
         return {
-            request: function (config) {
-                $log.debug('Request:');
-                return config;
-            },
             responseError: function (rejection) {
-                attributes = rejection.data !== undefined ? rejection.data : [];
-                if (422 === rejection.status) {
+                if (rejection.status && 422 === rejection.status) {
                     $rootScope.$broadcast(YII2_VALIDATE_EVENT, {
-                        errors: attributes
+                        errors: rejection.data !== undefined ? rejection.data : []
                     });
                 }
 
