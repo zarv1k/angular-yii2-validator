@@ -3,23 +3,20 @@
 
     angular.module('yii2Validator', [])
         .constant('YII2_VALIDATE_EVENT', 'yii2-validate-event')
-        .factory('yii2ResponseInterceptor', responseInterceptor)
-        .directive('yii2Validate', yii2ValidateDirective)
-        .directive("ngSubmit", yii2NgSubmit)
-        .config(configModule)
-        .run(run);
+        .factory('yii2ResponseInterceptor', ['$log', '$q', '$rootScope', 'YII2_VALIDATE_EVENT', responseInterceptor])
+        .directive('yii2Validate', ['$log', 'YII2_VALIDATE_EVENT', yii2ValidateDirective])
+        .directive("ngSubmit", ['$log', yii2NgSubmit])
+        .config(['$httpProvider', configModule])
+        .run(['$log', run]);
 
-    /** @ngInject */
     function configModule($httpProvider) {
         $httpProvider.interceptors.push('yii2ResponseInterceptor');
     }
 
-    /** @ngInject */
     function run($log) {
         $log.debug('yii2-validator module loaded');
     }
 
-    /** @ngInject */
     function yii2NgSubmit($log) {
         return {
             require: "?form",
@@ -37,7 +34,6 @@
         }
     }
 
-    /** @ngInject */
     function yii2ValidateDirective(YII2_VALIDATE_EVENT, $log) {
         return {
             require: '^form',
@@ -73,7 +69,6 @@
         };
     }
 
-    /** @ngInject */
     function responseInterceptor($log, $q, $rootScope, YII2_VALIDATE_EVENT) {
         var attributes;
 
